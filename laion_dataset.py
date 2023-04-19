@@ -13,7 +13,6 @@ class LaionDataset(BaseDataset):
     def __init__(self, vis_processor, text_processor, location):
         super().__init__(vis_processor=vis_processor, text_processor=text_processor)
 
-        self.inner_dataset = wds.DataPipeline(
             wds.ResampledShards(location),
             wds.tarfile_to_samples(handler=wds.warn_and_continue),
             wds.shuffle(1000, handler=wds.warn_and_continue),
@@ -23,7 +22,6 @@ class LaionDataset(BaseDataset):
             wds.map(self.to_dict, handler=wds.warn_and_continue),
         )
 
-    def to_dict(self, sample):
         return {
             "image": sample[0],
             "text_input": self.text_processor(sample[1]["caption"]),
